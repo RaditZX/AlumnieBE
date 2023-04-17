@@ -19,10 +19,18 @@ class kuliahApi{
                         }
                     } , 
                     {
+                        $skip: ((parseInt(req.query.page) - 1) * parseInt(req.query.limit))  || 0
+                    },
+                    {
+                        $limit: parseInt(req.query.limit) || 10,
+                     
+                    }, 
+                    {
                         $project:{
                             id_perusahaan:1,
                             perusahaan:1,
                             alamat:1,
+                            jumlah_alumni:1
                         }
                     }
                 ])
@@ -116,6 +124,35 @@ class kuliahApi{
                 res.json({
                     status: false,
                     message: "Data failed to post",
+                    data: null,
+                    error : err
+                })
+            }
+        }
+
+        this.updateAlumniKerjabyname = async (req,res) => {
+            try{
+                if(!req.body.jumlah){
+                    res.status(400).send({Message:"Silahkan isi data dengan lengkap"})
+                }
+                else{
+                    const jumlahAlumniKerja =  await perusahaan.model.find({id_perusahaan:req.params.name},{"jumlah_alumni":1, "_id":0})
+                    const finaljumlah =  {...jumlahAlumniKerja}
+                    const jumlahAlumniBekerja = await perusahaan.model.findOneAndUpdate({id_perusahaan:req.params.name},{
+                        jumlah_alumni:  (parseInt(Object.keys(finaljumlah)[0])  + 1)
+
+                })
+                    res.json({
+                        status: true,
+                        message: "Data update successfully",
+                        data:    jumlahAlumniBekerja
+                    }) 
+                }
+            }
+            catch(err){
+                res.json({
+                    status: false,
+                    message: "Data failed to update",
                     data: null,
                     error : err
                 })

@@ -16,10 +16,6 @@ class auth{
                   message: '{VALUE} is not a valid email!'
                 }
             },
-            role : {
-                type: String,
-                required : true,
-            },
             nip:Number,
             nama:String,
             jabatan:String,

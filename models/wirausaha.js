@@ -5,7 +5,9 @@ class wirausaha{
         this.wirausahaSchema = new mongoose.Schema({
             id_wirausaha : String,
             wirausaha : String,
+            bidang : String,
             alamat : String,
+            jumlah_alumni : Number,
             createdAt: {
                 type: Date,
                 default: Date.now

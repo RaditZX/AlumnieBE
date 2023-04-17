@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var acces_token = require('../middleware/verify')
 
+
+
 require('./module/alumni')(router,acces_token);
 require('./module/kelas')(router,acces_token);
 require('./module/analyticsJurusan/analyticsJurusan')(router,acces_token);

@@ -19,10 +19,18 @@ class kuliahApi{
                         }
                     } , 
                     {
+                        $skip: ((parseInt(req.query.page) - 1) * parseInt(req.query.limit))  || 0
+                    },
+                    {
+                        $limit: parseInt(req.query.limit) || 10,
+                     
+                    }, 
+                    {
                         $project:{
                             id_universitas:1,
                             universitas:1,
                             alamat:1,
+                            jumlah_alumni:1
                         }
                     }
                 ])
@@ -66,10 +74,10 @@ class kuliahApi{
         this.addAlumniKuliah = async (req,res) => { 
             try{
                 if(!req.body.nisn,!req.body.universitas,!req.body.alamat){
-                    res.status(400).send({Message:"Silahkan isi data dengan lengkap"})
+                    return res.status(400).send({Message:"Silahkan isi data dengan lengkap"})
                 }
                 else{
-                    const universitasCount  = await kuliah.model.find({}).count()
+                    const universitasCount  = await kuliah.model.find().count()
 
                     const addAlumniKuliah = await kuliah.model.create({
                         id_universitas : "univ-" + (parseInt( universitasCount) + 1),
@@ -96,7 +104,7 @@ class kuliahApi{
 
         this.updateAlumniKuliah = async (req,res) => {
             try{
-                if(!req.body.nisn,!req.body.universitas,!req.body.alamat){
+                if(!req.body.universitas,!req.body.alamat){
                     res.status(400).send({Message:"Silahkan isi data dengan lengkap"})
                 }
                 else{
@@ -108,7 +116,7 @@ class kuliahApi{
                     })
                     res.json({
                         status: true,
-                        message: "Data posted successfully",
+                        message: "Data update successfully",
                         data: addAlumniKuliah
                     }) 
                 }
@@ -116,7 +124,36 @@ class kuliahApi{
             catch(err){
                 res.json({
                     status: false,
-                    message: "Data failed to post",
+                    message: "Data failed to update",
+                    data: null,
+                    error : err
+                })
+            }
+        }
+
+        this.updateAlumniKuliahbyname = async (req,res) => {
+            try{
+                if(!req.body.jumlah){
+                    res.status(400).send({Message:"Silahkan isi data dengan lengkap"})
+                }
+                else{
+                    const jumlahAlumniUniv =  await kuliah.model.find({id_universitas:req.params.name},{"jumlah_alumni":1, "_id":0})
+                    const finaljumlah =  {...jumlahAlumniUniv}
+                    const jumlahAlumniKuliah = await kuliah.model.findOneAndUpdate({id_universitas:req.params.name},{
+                        jumlah_alumni:  (parseInt(Object.keys(finaljumlah)[0])  + 1)
+
+                })
+                    res.json({
+                        status: true,
+                        message: "Data update successfully",
+                        data:    jumlahAlumniKuliah
+                    }) 
+                }
+            }
+            catch(err){
+                res.json({
+                    status: false,
+                    message: "Data failed to update",
                     data: null,
                     error : err
                 })

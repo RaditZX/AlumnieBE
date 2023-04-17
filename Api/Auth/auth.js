@@ -64,7 +64,6 @@ class authAPI {
     this.signUp = async (req, res) => {
       const user = await new User.model({
         email: req.body.email,
-        role: req.body.role,
         password: bcrypt.hashSync(req.body.password, 8)
       });
 

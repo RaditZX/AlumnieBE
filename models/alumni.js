@@ -7,9 +7,11 @@ class alumni{
             nama : String,
             kelas : {type:mongoose.Schema.Types.ObjectId},
             angkatan : Number,
-            jenis_kelamin : String,
+            prodi : String,
             no_hp : Number,
             status : String,
+            image : String,
+            detail_status : String,
             createdAt: {
                 type: Date,
                 default: Date.now

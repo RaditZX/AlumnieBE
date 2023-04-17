@@ -6,6 +6,7 @@ class Kuliah{
             id_universitas : String,
             universitas : String,
             alamat : String,
+            jumlah_alumni : Number,
             createdAt: {
                 type: Date,
                 default: Date.now

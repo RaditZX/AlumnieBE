@@ -6,6 +6,7 @@ class perusahaan{
             id_perusahaan : String,
             perusahaan : String,
             alamat : String,
+            jumlah_alumni : Number,
             createdAt: {
                 type: Date,
                 default: Date.now

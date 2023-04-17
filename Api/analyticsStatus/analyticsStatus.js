@@ -1,12 +1,15 @@
 const alumni = require('../../models/alumni')
+const date = new Date();
 
 class analyticsStatusAPI{
     constructor(){
         this.getStatusAnalytics = async (req,res) => {
             try{
                 const getKuliahAnalytics = await alumni.model.find({status:{"$regex": /univ/i }}).count()
-                const getKerjahAnalytics = await alumni.model.find({status:{"$regex": /kerja/i }}).count()
+                const getKerjahAnalytics = await alumni.model.find({status:{"$regex": /perusahaan/i }}).count()
                 const getWirausahaAnalytics = await alumni.model.find({status:{"$regex": /wirausaha/i }}).count()
+                const getTungguAnalytics = await alumni.model.find({status:{"$regex": /Masa Tunggu/i }}).count()
+
 
                 res.json({
                     status: true,
@@ -14,7 +17,8 @@ class analyticsStatusAPI{
                     data: {
                         kuliah : getKuliahAnalytics,
                         kerja : getKerjahAnalytics,
-                        wirausaha : getWirausahaAnalytics
+                        wirausaha : getWirausahaAnalytics,
+                        masa_tunggu:getTungguAnalytics
                     }      
                 }) 
             }
@@ -27,13 +31,19 @@ class analyticsStatusAPI{
             }
         }
 
-        this.statusTerbanyakAnalytics = async (req,res) =>{
+        this.statusProdi = async (req,res) =>{
             try{
-                var datalumniKuliah = await alumni.model.find({status:{"$regexB": /univ/i }})
+                var TKI = await alumni.model.find({prodi:{"$regex": /TKI/i  }}).count()
+                var Elek = await alumni.model.find({prodi:{"$regex": /Elektronika/i }}).count()
+                var listrik = await alumni.model.find({prodi:{"$regex": /Listrik/i }}).count()
                 res.json({
                     status: true,
                     message: "Data loaded successfully",
-                    data: datalumniKuliah      
+                    data: {
+                        tki : TKI,
+                        elektronika : Elek,
+                        listrik: listrik
+                    }
                 }) 
             }catch(err){
                 res.json({
@@ -48,13 +58,12 @@ class analyticsStatusAPI{
 
         this.jumlahAlumniAnalytics = async (req,res) => {
             try{
-
-                var state1 = parseInt(req.query.tahun)
-                var state2 = state1 + 1
-                var state3 = state2 + 1
-                var state4 = state3 + 1
-                var state5 = state4 + 1
-                var state6 = state5 + 1
+                var state1 = parseInt(date.getFullYear())
+                var state2 = state1 - 1
+                var state3 = state2 - 1
+                var state4 = state3 - 1
+                var state5 = state4 - 1 
+                var state6 = state5 - 1
 
                 var tahun1 = await alumni.model.find({angkatan:{$eq:state1}}).count()
                 var tahun2 = await  alumni.model.find({angkatan:{$eq:state2}}).count()
@@ -67,12 +76,12 @@ class analyticsStatusAPI{
                     status: true,
                     message: "Data loaded successfully",
                     data: {
-                        [state1] : tahun1,
-                        [state2] : tahun2,
-                        [state3] : tahun3,
-                        [state4] : tahun4,
-                        [state5] : tahun5,
-                        [state6] : tahun6,
+                        tahunPertama : tahun6,
+                        tahunKedua : tahun5,
+                        tahunKetiga : tahun4,
+                        tahunKeempat : tahun3,
+                        tahunKelima : tahun2,
+                        tahunKeenam : tahun1,
                     }      
                 }) 
 

@@ -4,9 +4,12 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors')
+var multer = require('multer')
+var bodyParser = require ('body-parser')
 
 //get routes
 var indexRouter = require('./routes/index');
+
 
 
 
@@ -22,6 +25,7 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(cors());
+app.use(bodyParser.urlencoded({extended:true}))
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -29,6 +33,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', function(req, res, next) {
   res.render('index', { title: 'Alumnie Api', name : 'Daiva Raditya' });
 });
+
+
 app.use('/api', indexRouter);
 
 
